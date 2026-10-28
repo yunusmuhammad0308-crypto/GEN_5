@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UMKM Kita — Form Pemesanan</title>
+  <style>
+    :root {
+      --green: #176b4d;
+      --green-dark: #104b37;
+      --mint: #eaf6ef;
+      --cream: #fffaf1;
+      --ink: #20352b;
+      --muted: #6b7c72;
+      --line: #dce8df;
+      --orange: #f2a65a;
+      --white: #ffffff;
+      --shadow: 0 16px 40px rgba(24, 70, 49, .09);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #f4faf5 0%, #fffaf1 100%);
+      line-height: 1.5;
+    }
+    .topbar {
+      background: var(--green-dark);
+      color: white;
+      padding: 12px 20px;
+      text-align: center;
+      font-size: .9rem;
+      letter-spacing: .2px;
+    }
+    header {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 28px 22px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .logo {
+      width: 48px; height: 48px; border-radius: 16px;
+      display: grid; place-items: center; background: var(--green); color: white;
+      font-size: 1.5rem; box-shadow: 0 8px 18px #176b4d2b;
+    }
+    .brand h1 { margin: 0; font-size: 1.25rem; letter-spacing: -.4px; }
+    .brand p { margin: 2px 0 0; color: var(--muted); font-size: .85rem; }
+    .pill {
+      background: #fff; border: 1px solid var(--line); color: var(--green);
+      border-radius: 999px; padding: 9px 14px; font-weight: 700; font-size: .85rem;
+      white-space: nowrap;
+    }
+    main { max-width: 1120px; margin: 0 auto; padding: 8px 22px 56px; }
+    .hero {
+      padding: 34px; border-radius: 28px; color: white; overflow: hidden;
+      background: radial-gradient(circle at 88% 20%, #4b9a70 0, transparent 27%),
+                  linear-gradient(120deg, #104b37, #176b4d 65%, #2c805c);
+      position: relative; box-shadow: var(--shadow);
+    }
+    .hero:after {
+      content: "🌿"; position: absolute; right: 7%; bottom: -34px; font-size: 9rem;
+      opacity: .15; transform: rotate(-15deg);
+    }
+    .eyebrow { text-transform: uppercase; letter-spacing: 1.7px; font-size: .75rem; font-weight: 800; color: #c8f0d6; }
+    .hero h2 { max-width: 660px; margin: 9px 0 10px; font-size: clamp(2rem, 5vw, 3.15rem); line-height: 1.08; letter-spacing: -1.2px; }
+    .hero p { max-width: 620px; margin: 0; color: #e0f2e6; }
+    .hero-note { margin-top: 22px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .hero-note span { background: #ffffff1c; border: 1px solid #ffffff30; border-radius: 999px; padding: 7px 12px; font-size: .84rem; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(300px, .8fr); gap: 22px; margin-top: 24px; align-items: start; }
+    .panel { background: var(--white); border: 1px solid var(--line); border-radius: 22px; padding: 25px; box-shadow: var(--shadow); }
+    .section-head { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .step {
+      flex: 0 0 38px; width: 38px; height: 38px; display: grid; place-items: center;
+      background: var(--mint); color: var(--green); border-radius: 13px; font-weight: 900;
+    }
+    .section-head h3 { margin: 0; font-size: 1.15rem; }
+    .section-head p { margin: 2px 0 0; color: var(--muted); font-size: .86rem; }
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field { margin-bottom: 16px; }
+    label, legend { display: block; font-size: .9rem; font-weight: 750; margin-bottom: 7px; }
+    input[type="text"], input[type="tel"], input[type="number"], input[type="search"], select, textarea {
+      width: 100%; border: 1px solid #cfddd3; border-radius: 12px; background: #fcfefc;
+      padding: 12px 13px; color: var(--ink); font: inherit; outline: none; transition: border .2s, box-shadow .2s;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--green); box-shadow: 0 0 0 3px #176b4d1c; }
+    textarea { resize: vertical; min-height: 105px; }
+    .hint { color: var(--muted); font-size: .78rem; margin: 6px 0 0; }
+    fieldset { border: 0; margin: 0 0 17px; padding: 0; min-width: 0; }
+    .choice-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .choice {
+      display: flex; align-items: flex-start; gap: 9px; padding: 12px;
+      border: 1px solid var(--line); border-radius: 12px; background: #fcfefc;
+      font-weight: 500; font-size: .87rem; cursor: pointer;
+    }
+    .choice input { accent-color: var(--green); margin-top: 4px; }
+    .products-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 22px 0 14px; }
+    .products-head h3 { margin: 0; font-size: 1.1rem; }
+    .search { max-width: 230px; }
+    .products { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
+    .product {
+      border: 1px solid var(--line); border-radius: 16px; padding: 15px; background: #fff;
+      transition: transform .18s, border .18s, box-shadow .18s;
+    }
+    .product:hover { transform: translateY(-2px); border-color: #9ac9aa; box-shadow: 0 10px 22px #176b4d10; }
+    .product-top { display: flex; align-items: center; gap: 11px; }
+    .product-emoji { width: 54px; height: 54px; display: grid; place-items: center; background: var(--cream); border-radius: 15px; font-size: 1.9rem; }
+    .product h4 { margin: 0; font-size: .96rem; }
+    .product .desc { color: var(--muted); font-size: .78rem; margin: 3px 0 0; }
+    .product-bottom { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 15px; }
+    .price { font-weight: 850; color: var(--green); font-size: .95rem; }
+    .qty { display: flex; align-items: center; gap: 8px; }
+    .qty button { width: 30px; height: 30px; border: 1px solid var(--line); border-radius: 9px; background: var(--mint); color: var(--green); font-weight: 900; cursor: pointer; }
+    .qty span { min-width: 13px; text-align: center; font-weight: 750; }
+    .summary { position: sticky; top: 18px; }
+    .summary-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .summary-title h3 { margin: 0; font-size: 1.15rem; }
+    .cart-count { display: grid; place-items: center; min-width: 29px; height: 29px; padding: 0 8px; background: var(--mint); color: var(--green); border-radius: 999px; font-weight: 850; }
+    .cart-items { margin: 17px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 10px 0; }
+    .cart-empty { color: var(--muted); text-align: center; padding: 22px 8px; font-size: .9rem; }
+    .cart-row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; font-size: .88rem; }
+    .cart-row small { display: block; color: var(--muted); margin-top: 2px; }
+    .totals { display: grid; gap: 9px; }
+    .total-line { display: flex; justify-content: space-between; gap: 10px; font-size: .9rem; }
+    .grand-total { border-top: 1px dashed #cbdccf; padding-top: 13px; margin-top: 3px; font-size: 1.12rem; font-weight: 900; color: var(--green-dark); }
+    .button {
+      border: 0; border-radius: 13px; padding: 13px 16px; font: inherit; font-weight: 800; cursor: pointer;
+      transition: transform .15s, opacity .15s;
+    }
+    .button:hover { transform: translateY(-1px); }
+    .primary { background: var(--green); color: white; width: 100%; margin-top: 18px; box-shadow: 0 8px 18px #176b4d28; }
+    .secondary { background: #f1f6f2; color: var(--green-dark); border: 1px solid var(--line); }
+    .button-row { display: flex; gap: 10px; margin-top: 12px; }
+    .button-row button { flex: 1; }
+    .privacy { font-size: .76rem; color: var(--muted); text-align: center; margin: 13px 0 0; }
+    .notice { display: none; margin-top: 14px; border-radius: 12px; padding: 12px; font-size: .88rem; }
+    .notice.show { display: block; }
+    .notice.success { background: #e8f7ec; border: 1px solid #b9e0c4; color: #155b36; }
+    .notice.error { background: #fff0e8; border: 1px solid #f0c6ae; color: #8b3b18; }
+    .footer { text-align: center; color: var(--muted); padding: 28px 10px 0; font-size: .82rem; }
+    .footer strong { color: var(--green); }
+    @media (max-width: 820px) { .layout { grid-template-columns: 1fr; } .summary { position: static; } }
+    @media (max-width: 560px) {
+      header { align-items: flex-start; } .pill { display: none; } .hero { padding: 25px; border-radius: 22px; }
+      .panel { padding: 19px; } .field-grid, .products, .choice-list { grid-template-columns: 1fr; }
+      .products-head { align-items: stretch; flex-direction: column; } .search { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">🌱 Dukung produk lokal — belanja dari UMKM, tumbuhkan ekonomi bersama</div>
+  <header>
+    <div class="brand">
+      <div class="logo">🧺</div>
+      <div><h1>UMKM Kita</h1><p>Produk lokal pilihan, dibuat dengan hati</p></div>
+    </div>
+    <div class="pill">✦ Belanja mudah & praktis</div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Form pemesanan online</div>
+      <h2>Produk lokal, rasa istimewa.</h2>
+      <p>Pilih produk favoritmu, lengkapi data pemesanan, lalu periksa ringkasan pesanan sebelum mengirim formulir.</p>
+      <div class="hero-note"><span>✓ Produk pilihan</span><span>✓ Total otomatis</span><span>✓ Form mudah digunakan</span></div>
+    </section>
+
+    <form id="orderForm" novalidate>
+      <div class="layout">
+        <div>
+          <section class="panel">
+            <div class="section-head">
+              <div class="step">01</div>
+              <div><h3>Data pemesan</h3><p>Isi informasi untuk keperluan pesanan.</p></div>
+            </div>
+            <div class="field-grid">
+              <div class="field">
+                <label for="nama">Nama lengkap *</label>
+                <input type="text" id="nama" name="nama" placeholder="Contoh: Siti Aminah" required>
+              </div>
+              <div class="field">
+                <label for="wa">Nomor WhatsApp *</label>
+                <input type="tel" id="wa" name="whatsapp" placeholder="Contoh: 081234567890" required>
+              </div>
+            </div>
+            <div class="field">
+              <label for="alamat">Alamat pengiriman *</label>
+              <input type="text" id="alamat" name="alamat" placeholder="Nama jalan, nomor rumah, kecamatan" required>
+            </div>
+            <div class="field-grid">
+              <div class="field">
+                <label for="kota">Kota / Kabupaten *</label>
+                <input type="text" id="kota" name="kota" placeholder="Contoh: Surabaya" required>
+              </div>
+              <div class="field">
+                <label for="kodepos">Kode pos</label>
+                <input type="text" id="kodepos" name="kodepos" placeholder="Contoh: 60123">
+              </div>
+            </div>
+          </section>
+
+          <section class="panel" style="margin-top:20px">
+            <div class="section-head">
+              <div class="step">02</div>
+              <div><h3>Pilih produk</h3><p>Gunakan tombol + dan − untuk mengatur jumlah.</p></div>
+            </div>
+            <div class="products-head">
+              <h3>Produk UMKM unggulan</h3>
+              <input class="search" type="search" id="searchProduct" placeholder="🔎 Cari produk...">
+            </div>
+            <div class="products" id="productList">
+              <article class="product" data-name="Keripik Pisang">
+                <div class="product-top"><div class="product-emoji">🍌</div><div><h4>Keripik Pisang</h4><p class="desc">Renyah • 200 gram</p></div></div>
+                <div class="product-bottom"><span class="price" data-price="18000">Rp18.000</span><div class="qty"><button type="button" data-action="minus" data-product="keripik" aria-label="Kurangi Keripik Pisang">−</button><span id="qty-keripik">0</span><button type="button" data-action="plus" data-product="keripik" aria-label="Tambah Keripik Pisang">+</button></div></div>
+              </article>
+              <article class="product" data-name="Kerupuk Ikan">
+                <div class="product-top"><div class="product-emoji">🐟</div><div><h4>Kerupuk Ikan</h4><p class="desc">Gurih • 250 gram</p></div></div>
+                <div class="product-bottom"><span class="price" data-price="22000">Rp22.000</span><div class="qty"><button type="button" data-action="minus" data-product="kerupuk" aria-label="Kurangi Kerupuk Ikan">−</button><span id="qty-kerupuk">0</span><button type="button" data-action="plus" data-product="kerupuk" aria-label="Tambah Kerupuk Ikan">+</button></div></div>
+              </article>
+              <article class="product" data-name="Kue Kering">
+                <div class="product-top"><div class="product-emoji">🍪</div><div><h4>Kue Kering</h4><p class="desc">Homemade • 300 gram</p></div></div>
+                <div class="product-bottom"><span class="price" data-price="35000">Rp35.000</span><div class="qty"><button type="button" data-action="minus" data-product="kue" aria-label="Kurangi Kue Kering">−</button><span id="qty-kue">0</span><button type="button" data-action="plus" data-product="kue" aria-label="Tambah Kue Kering">+</button></div></div>
+              </article>
+              <article class="product" data-name="Sambal Kemasan">
+                <div class="product-top"><div class="product-emoji">🌶️</div><div><h4>Sambal Kemasan</h4><p class="desc">Pedas mantap • 150 gram</p></div></div>
+                <div class="product-bottom"><span class="price" data-price="15000">Rp15.000</span><div class="qty"><button type="button" data-action="minus" data-product="sambal" aria-label="Kurangi Sambal Kemasan">−</button><span id="qty-sambal">0</span><button type="button" data-action="plus" data-product="sambal" aria-label="Tambah Sambal Kemasan">+</button></div></div>
+              </article>
+            </div>
+            <p class="hint">Harga dan produk di halaman ini adalah contoh untuk latihan. Silakan sesuaikan dengan produk UMKM sebenarnya.</p>
+          </section>
+
+          <section class="panel" style="margin-top:20px">
+            <div class="section-head">
+              <div class="step">03</div>
+              <div><h3>Pengiriman & pembayaran</h3><p>Pilih opsi yang paling sesuai.</p></div>
+            </div>
+            <div class="field-grid">
+              <div class="field">
+                <label for="pengiriman">Metode pengiriman *</label>
+                <select id="pengiriman" name="pengiriman" required>
+                  <option value="">-- Pilih pengiriman --</option>
+                  <option value="reguler" data-cost="10000">Reguler — Rp10.000</option>
+                  <option value="kilat" data-cost="18000">Kilat — Rp18.000</option>
+                  <option value="ambil" data-cost="0">Ambil sendiri — Gratis</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="waktu">Waktu pengiriman</label>
+                <select id="waktu" name="waktu">
+                  <option value="secepatnya">Secepatnya</option>
+                  <option value="pagi">Pagi (08.00–11.00)</option>
+                  <option value="siang">Siang (11.00–15.00)</option>
+                  <option value="sore">Sore (15.00–18.00)</option>
+                </select>
+              </div>
+            </div>
+
+            <fieldset>
+              <legend>Metode pembayaran * (pilih satu)</legend>
+              <div class="choice-list">
+                <label class="choice"><input type="radio" name="pembayaran" value="Transfer Bank" required><span>🏦 Transfer bank</span></label>
+                <label class="choice"><input type="radio" name="pembayaran" value="COD"><span>🚚 Bayar di tempat (COD)</span></label>
+                <label class="choice"><input type="radio" name="pembayaran" value="E-Wallet"><span>📱 E-Wallet</span></label>
+                <label class="choice"><input type="radio" name="pembayaran" value="Tunai saat ambil"><span>💵 Tunai saat ambil</span></label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>Layanan tambahan (boleh pilih lebih dari satu)</legend>
+              <div class="choice-list">
+                <label class="choice"><input type="checkbox" name="layanan" value="Bungkus kado" data-cost="5000"><span>🎁 Bungkus kado <strong>(+Rp5.000)</strong></span></label>
+                <label class="choice"><input type="checkbox" name="layanan" value="Kartu ucapan" data-cost="2000"><span>💌 Kartu ucapan <strong>(+Rp2.000)</strong></span></label>
+                <label class="choice"><input type="checkbox" name="layanan" value="Tas ramah lingkungan" data-cost="3000"><span>🌿 Tas ramah lingkungan <strong>(+Rp3.000)</strong></span></label>
+                <label class="choice"><input type="checkbox" name="layanan" value="Tanpa alat makan" data-cost="0"><span>♻️ Kurangi kemasan tambahan</span></label>
+              </div>
+            </fieldset>
+
+            <div class="field">
+              <label for="catatan">Catatan pesanan</label>
+              <textarea id="catatan" name="catatan" placeholder="Contoh: Jangan terlalu pedas, tulis pesan pada kartu ucapan, atau instruksi lain."></textarea>
+            </div>
+            <label class="choice"><input type="checkbox" id="setuju" required><span>Saya sudah memeriksa data dan ringkasan pesanan. *</span></label>
+          </section>
+        </div>
+
+        <aside class="panel summary">
+          <div class="summary-title"><h3>🛒 Ringkasan pesanan</h3><span class="cart-count" id="cartCount">0 item</span></div>
+          <div class="cart-items" id="cartItems"><div class="cart-empty">Keranjang masih kosong.<br>Pilih produk untuk mulai memesan.</div></div>
+          <div class="totals">
+            <div class="total-line"><span>Subtotal produk</span><strong id="subtotal">Rp0</strong></div>
+            <div class="total-line"><span>Pengiriman</span><strong id="shippingCost">Rp0</strong></div>
+            <div class="total-line"><span>Layanan tambahan</span><strong id="extrasCost">Rp0</strong></div>
+            <div class="total-line grand-total"><span>Total</span><strong id="grandTotal">Rp0</strong></div>
+          </div>
+          <button class="button primary" type="submit">Kirim Pesanan →</button>
+          <div class="button-row">
+            <button class="button secondary" type="button" id="resetBtn">Reset form</button>
+            <button class="button secondary" type="button" id="printBtn">Cetak ringkasan</button>
+          </div>
+          <div class="notice" id="notice" role="status" aria-live="polite"></div>
+          <p class="privacy">🔒 Contoh formulir pembelajaran. Data belum dikirim ke server atau penjual.</p>
+        </aside>
+      </div>
+    </form>
+    <div class="footer">Dibuat untuk latihan HTML, CSS, dan JavaScript · <strong>Bangga Produk UMKM Indonesia 🇮🇩</strong></div>
+  </main>
+
+  <script>
+    const products = {
+      keripik: { name: "Keripik Pisang", price: 18000 },
+      kerupuk: { name: "Kerupuk Ikan", price: 22000 },
+      kue: { name: "Kue Kering", price: 35000 },
+      sambal: { name: "Sambal Kemasan", price: 15000 }
+    };
+    const quantities = { keripik: 0, kerupuk: 0, kue: 0, sambal: 0 };
+    const rupiah = n => new Intl.NumberFormat("id-ID", {
+      style: "currency", currency: "IDR", maximumFractionDigits: 0
+    }).format(n);
+
+    const deliveryCost = () => {
+      const option = document.querySelector("#pengiriman").selectedOptions[0];
+      return option && option.dataset.cost ? Number(option.dataset.cost) : 0;
+    };
+    const extraCost = () => [...document.querySelectorAll('input[name="layanan"]:checked')]
+      .reduce((sum, el) => sum + Number(el.dataset.cost || 0), 0);
+    const subtotalCost = () => Object.entries(quantities)
+      .reduce((sum, [id, qty]) => sum + products[id].price * qty, 0);
+    const itemCount = () => Object.values(quantities).reduce((sum, qty) => sum + qty, 0);
+
+    function renderCart() {
+      Object.entries(quantities).forEach(([id, qty]) => {
+        document.getElementById(`qty-${id}`).textContent = qty;
+      });
+      const cart = document.getElementById("cartItems");
+      const selected = Object.entries(quantities).filter(([, qty]) => qty > 0);
+      document.getElementById("cartCount").textContent = `${itemCount()} item`;
+      if (!selected.length) {
+        cart.innerHTML = '<div class="cart-empty">Keranjang masih kosong.<br>Pilih produk untuk mulai memesan.</div>';
+      } else {
+        cart.innerHTML = selected.map(([id, qty]) => `
+          <div class="cart-row">
+            <div>${products[id].name}<small>${qty} × ${rupiah(products[id].price)}</small></div>
+            <strong>${rupiah(qty * products[id].price)}</strong>
+          </div>`).join("");
+      }
+      const subtotal = subtotalCost();
+      const shipping = deliveryCost();
+      const extras = extraCost();
+      document.getElementById("subtotal").textContent = rupiah(subtotal);
+      document.getElementById("shippingCost").textContent = rupiah(shipping);
+      document.getElementById("extrasCost").textContent = rupiah(extras);
+      document.getElementById("grandTotal").textContent = rupiah(subtotal + shipping + extras);
+    }
+
+    document.getElementById("productList").addEventListener("click", event => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+      const id = button.dataset.product;
+      if (button.dataset.action === "plus") quantities[id]++;
+      if (button.dataset.action === "minus") quantities[id] = Math.max(0, quantities[id] - 1);
+      renderCart();
+    });
+
+    document.getElementById("searchProduct").addEventListener("input", event => {
+      const term = event.target.value.toLowerCase().trim();
+      document.querySelectorAll(".product").forEach(card => {
+        card.hidden = !card.dataset.name.toLowerCase().includes(term);
+      });
+    });
+
+    document.getElementById("pengiriman").addEventListener("change", renderCart);
+    document.querySelectorAll('input[name="layanan"]').forEach(el => el.addEventListener("change", renderCart));
+
+    const notice = document.getElementById("notice");
+    function showNotice(message, type) {
+      notice.textContent = message;
+      notice.className = `notice show ${type}`;
+    }
+
+    document.getElementById("orderForm").addEventListener("submit", event => {
+      event.preventDefault();
+      notice.className = "notice";
+      const form = event.currentTarget;
+      if (!form.reportValidity()) {
+        showNotice("Periksa kembali kolom wajib yang belum diisi.", "error");
+        return;
+      }
+      if (itemCount() === 0) {
+        showNotice("Pilih minimal satu produk sebelum mengirim pesanan.", "error");
+        return;
+      }
+      const data = new FormData(form);
+      const selectedServices = data.getAll("layanan");
+      const summary = [
+        "PESANAN UMKM KITA",
+        `Nama: ${data.get("nama")}`,
+        `WhatsApp: ${data.get("whatsapp")}`,
+        `Alamat: ${data.get("alamat")}, ${data.get("kota")}`,
+        `Produk: ${Object.entries(quantities).filter(([,q]) => q > 0).map(([id,q]) => `${products[id].name} x${q}`).join(", ")}`,
+        `Pengiriman: ${document.querySelector("#pengiriman").selectedOptions[0].textContent}`,
+        `Pembayaran: ${data.get("pembayaran")}`,
+        `Layanan tambahan: ${selectedServices.length ? selectedServices.join(", ") : "Tidak ada"}`,
+        `Catatan: ${data.get("catatan") || "-"}`,
+        `TOTAL: ${document.getElementById("grandTotal").textContent}`
+      ].join("\n");
+      showNotice("Pesanan berhasil diperiksa di halaman ini. Fitur ini belum mengirim data ke penjual. Kamu bisa mencetak ringkasan atau menghubungkan formulir ke backend.", "success");
+      window.lastOrderSummary = summary;
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      document.getElementById("orderForm").reset();
+      Object.keys(quantities).forEach(id => quantities[id] = 0);
+      document.querySelectorAll(".product").forEach(card => card.hidden = false);
+      document.getElementById("searchProduct").value = "";
+      notice.className = "notice";
+      renderCart();
+    });
+
+    document.getElementById("printBtn").addEventListener("click", () => {
+      if (itemCount() === 0) {
+        showNotice("Pilih produk terlebih dahulu agar ringkasan bisa dicetak.", "error");
+        return;
+      }
+      const rows = Object.entries(quantities).filter(([,q]) => q > 0)
+        .map(([id,q]) => `${products[id].name} x${q} = ${rupiah(products[id].price*q)}`).join("\n");
+      const text = `RINGKASAN PESANAN UMKM KITA\n\n${rows}\n\nSubtotal: ${document.getElementById("subtotal").textContent}\nPengiriman: ${document.getElementById("shippingCost").textContent}\nLayanan tambahan: ${document.getElementById("extrasCost").textContent}\nTOTAL: ${document.getElementById("grandTotal").textContent}`;
+      const win = window.open("", "_blank", "width=600,height=700");
+      if (!win) {
+        showNotice("Browser memblokir jendela cetak. Izinkan pop-up lalu coba lagi.", "error");
+        return;
+      }
+      win.document.write(`<pre style="font:16px/1.6 system-ui;white-space:pre-wrap;padding:24px">${text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</pre>`);
+      win.document.close();
+      win.print();
+    });
+
+    renderCart();
+  </script>
+</body>
+</html>
